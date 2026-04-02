@@ -362,6 +362,7 @@ class _Destructor(_ScopedItem, _Access):
         _Access.__init__(self, parser, attrs)
 
         self.virtual = bool(int(optAttribute(attrs, "virtual", "0")))
+        self.abstract = bool(int(optAttribute(attrs, "pure_virtual", "0")))
 
     def transform(self, parser, scope):
         """
@@ -372,7 +373,7 @@ class _Destructor(_ScopedItem, _Access):
         """
         scope.content.append(
                 Destructor(name=self.name, access=self.access,
-                        virtual=self.virtual, status='unknown'))
+                        virtual=self.virtual, abstract=self.abstract, status='unknown'))
 
 
 class _Converter(_ClassCallable):

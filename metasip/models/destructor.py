@@ -13,6 +13,9 @@ from .code import Code
 class Destructor(Code, Access):
     """ This class implements a C++ destructor. """
 
+    # This is set if the method is abstract.
+    abstract: bool = False
+
     # The optional %MethodCode.
     methcode: str = ''
 

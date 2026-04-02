@@ -16,6 +16,7 @@ class DestructorAdapter(BaseApiAdapter):
 
     # The map of attribute names and types.
     ATTRIBUTE_TYPE_MAP = {
+        'abstract': AttributeType.BOOL,
         'methcode': AttributeType.LITERAL,
         'name':     AttributeType.STRING,
         'virtcode': AttributeType.LITERAL,
@@ -40,6 +41,9 @@ class DestructorAdapter(BaseApiAdapter):
         if dtor.virtual != other_dtor.virtual:
             return False
 
+        if dtor.abstract != other_dtor.abstract:
+            return False
+
         return True
 
     def as_str(self):
@@ -47,10 +51,16 @@ class DestructorAdapter(BaseApiAdapter):
 
         dtor = self.model
 
-        s = '~' + dtor.name + '()' + adapt(dtor, Annos).as_str()
+        s = ''
 
         if dtor.virtual:
-            s = 'virtual ' + s
+            s += 'virtual '
+
+        s += '~' + dtor.name + '()'
+        if dtor.abstract:
+            s += ' = 0'
+
+        s += adapt(dtor, Annos).as_str()
 
         return s
 
@@ -89,6 +99,7 @@ class DestructorAdapter(BaseApiAdapter):
         adapt(dtor, Access).save_attributes(output)
         self.save_attribute('name', dtor.name, output)
         self.save_bool('virtual', output)
+        self.save_bool('abstract', output)
         output.write('>\n')
 
         output += 1
